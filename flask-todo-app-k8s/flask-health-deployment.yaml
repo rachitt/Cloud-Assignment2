@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-container
+        image: docker.io/rachit798/flask-todo-app:v2
+        ports:
+        - containerPort: 5000
+        env:
+            - name: MONGO_HOST
+              value: mongo
+            - name: MONGO_PORT
+              value: "27017"
+        livenessProbe:
+          httpGet:
+            path: /healthz        # endpoint to check if pod is healthy
+            port: 5000
+          initialDelaySeconds: 10 # delay before the first check
+          periodSeconds: 5        # interval between checks
+          timeoutSeconds: 3       # timeout for each check
+        readinessProbe:
+          httpGet:
+            path: /ready           # endpoint to check if pod is ready for traffic
+            port: 5000
+          initialDelaySeconds: 5  # delay before the first check
+          periodSeconds: 5
+          timeoutSeconds: 3

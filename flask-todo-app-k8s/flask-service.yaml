@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: flask-app  # Ensure this matches the label of your Flask deployment
+  ports:
+    - port: 80         # Port exposed by the service
+      targetPort: 5000   # Port the application is listening on
+      # nodePort: 30000  
