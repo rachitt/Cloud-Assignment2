@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: flask-container
-        image: docker.io/rachit798/flask-todo-app:v2
+        image: docker.io/rachit798/flask-todo-app:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:
@@ -24,15 +25,17 @@ spec:
               value: "27017"
         livenessProbe:
           httpGet:
-            path: /healthz        # endpoint to check if pod is healthy
+            path: /healthz        
             port: 5000
-          initialDelaySeconds: 10 # delay before the first check
-          periodSeconds: 5        # interval between checks
-          timeoutSeconds: 3       # timeout for each check
+          initialDelaySeconds: 15 
+          periodSeconds: 5        
+          timeoutSeconds: 3  
+          failureThreshold: 3     
         readinessProbe:
           httpGet:
-            path: /ready           # endpoint to check if pod is ready for traffic
+            path: /ready           
             port: 5000
-          initialDelaySeconds: 5  # delay before the first check
+          initialDelaySeconds: 15  
           periodSeconds: 5
           timeoutSeconds: 3
+          failureThreshold: 3
