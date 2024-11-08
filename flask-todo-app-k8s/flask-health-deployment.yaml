@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flask-deployment
+  labels:
+    app: flask-app
 spec:
   replicas: 3
   selector:
@@ -13,29 +15,29 @@ spec:
         app: flask-app
     spec:
       containers:
-      - name: flask-container
-        image: docker.io/rachit798/flask-todo-app:v1
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
-        env:
+        - name: flask-container
+          image: docker.io/rachit798/flask-todo-app:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          env:
             - name: MONGO_HOST
               value: mongo
             - name: MONGO_PORT
               value: "27017"
-        livenessProbe:
-          httpGet:
-            path: /healthz        
-            port: 5000
-          initialDelaySeconds: 15 
-          periodSeconds: 5        
-          timeoutSeconds: 3  
-          failureThreshold: 3     
-        readinessProbe:
-          httpGet:
-            path: /ready           
-            port: 5000
-          initialDelaySeconds: 15  
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3

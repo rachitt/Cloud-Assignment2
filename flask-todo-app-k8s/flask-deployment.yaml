@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flask-deployment
+  labels:
+    app: flask-app
 spec:
   replicas: 1
   selector:
@@ -14,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask-container
-          image: docker.io/rachit798/flask-todo-app:v1
+          image: singhdivyansh/cloud-assignment2-web:latest
           imagePullPolicy: "Always"
           ports:
             - containerPort: 5000
