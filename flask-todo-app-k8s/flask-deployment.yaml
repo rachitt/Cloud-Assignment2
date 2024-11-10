@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask-container
-          image: singhdivyansh/cloud-assignment2-web:latest
+          image: docker.io/rachit798/flask-todo-app:v1
           imagePullPolicy: "Always"
           ports:
             - containerPort: 5000
