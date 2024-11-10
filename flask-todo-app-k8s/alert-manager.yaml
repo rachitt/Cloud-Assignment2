@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: config-slack
+  labels:
+    alertmanagerConfig: slack
+spec:
+  route:
+    groupBy: ["job"]
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 12h
+    receiver: "webhook"
+  receivers:
+    - name: "webhook"
+      slackConfigs:
+        - channel: "#cloud"
+          apiURL:
+            name: slack-url
+            key: url
+          sendResolved: true
+          username: webhookbot
+          text: |
+            *Alert:* {{ .CommonAnnotations.summary }}
+            *Description:* {{ .CommonAnnotations.description }}

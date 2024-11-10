@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: flaskapp-rules
+  namespace: default
+  labels:
+    app: kube-prometheus-stack
+    app.kubernetes.io/instance: assign2
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    app.kubernetes.io/version: 66.1.0
+    chart: kube-prometheus-stack-66.1.0
+    heritage: Helm
+    release: assign2
+spec:
+  groups:
+    - name: flaskapp.rule
+      rules:
+        - alert: FlaskAppDown
+          expr: max_over_time(kube_pod_container_status_waiting_reason{job="kube-state-metrics",namespace="default",pod=~"flask-deployment-.*",reason="CrashLoopBackOff"}[5m]) >= 1
+          for: 5s
+          labels:
+            severity: critical
+          annotations:
+            summary: "FlaskApp Pod is crash looping"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) has been in CrashLoopBackOff state for more than 5 seconds."
